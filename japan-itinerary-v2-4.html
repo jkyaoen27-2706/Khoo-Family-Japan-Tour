@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Japan Family Journey — Dec 3–17</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+<style>
+  :root {
+    --ink:       #1a1209;
+    --cream:     #fdf6ec;
+    --parchment: #f5e9d3;
+    --red:       #c0392b;
+    --gold:      #c8941a;
+    --moss:      #3d6b4f;
+    --fog:       #8b8279;
+    --snow:      #ffffff;
+    --sakura:    #e8a4b0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 70% 40%, rgba(192,57,43,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(61,107,79,0.15) 0%, transparent 50%),
+      linear-gradient(160deg, #1a1209 0%, #2c1f0e 45%, #3a2810 100%);
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  /* Japanese character watermark */
+  .hero::before {
+    content: '日本';
+    position: absolute;
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(14rem, 35vw, 36rem);
+    font-weight: 800;
+    color: rgba(255,255,255,0.03);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Torii silhouette */
+  .torii {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  /* Floating circles */
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .hero-orb:nth-child(1) { width: 320px; height: 320px; background: radial-gradient(circle, rgba(200,148,26,0.2), transparent); top: -80px; right: -80px; animation-delay: 0s; }
+  .hero-orb:nth-child(2) { width: 200px; height: 200px; background: radial-gradient(circle, rgba(192,57,43,0.3), transparent); bottom: 10%; left: 5%; animation-delay: -3s; }
+  .hero-orb:nth-child(3) { width: 150px; height: 150px; background: radial-gradient(circle, rgba(232,164,176,0.2), transparent); top: 20%; left: 20%; animation-delay: -6s; }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-20px); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 700;
+    color: var(--snow);
+    line-height: 1.05;
+    text-align: center;
+    animation: fadeUp 1s 0.15s ease both;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.15em;
+    text-align: center;
+    margin-top: 1.2rem;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 2.2rem;
+    animation: fadeUp 1s 0.45s ease both;
+  }
+
+  .tag {
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(200,148,26,0.4);
+    border-radius: 100px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.7);
+    background: rgba(200,148,26,0.08);
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    animation: fadeUp 1s 0.7s ease both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(200,148,26,0.6), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    50%  { transform: scaleY(1); transform-origin: top; }
+    51%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── OVERVIEW STRIP ──────────────────────────────── */
+  .overview-strip {
+    background: var(--red);
+    color: var(--snow);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    text-align: center;
+  }
+
+  .ov-item {
+    padding: 1.8rem 1rem;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .ov-item:last-child { border-right: none; }
+
+  .ov-num {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .ov-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 0.3rem;
+  }
+
+  /* ── SECTION WRAPPER ─────────────────────────────── */
+  .section { padding: 5rem 2rem; max-width: 1300px; margin: 0 auto; }
+  .section-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .divider {
+    width: 48px;
+    height: 3px;
+    background: var(--gold);
+    margin: 1.2rem 0 2.5rem;
+    border-radius: 2px;
+  }
+
+  /* ── MAP ─────────────────────────────────────────── */
+  .map-wrap {
+    background: var(--parchment);
+    padding: 4rem 2rem;
+  }
+  .map-inner { max-width: 1300px; margin: 0 auto; }
+
+  #map {
+    width: 100%;
+    height: 560px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(26,18,9,0.2);
+    border: 3px solid var(--gold);
+    margin-top: 2rem;
+    overflow: hidden;
+  }
+
+  /* Custom Leaflet popup */
+  .leaflet-popup-content-wrapper {
+    background: var(--ink);
+    color: var(--snow);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    border: 1px solid var(--gold);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .leaflet-popup-tip { background: var(--ink); }
+  .leaflet-popup-content { margin: 14px 18px; }
+
+  .pop-city {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .pop-dates {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Josefin Sans', sans-serif;
+    margin-bottom: 8px;
+  }
+  .pop-desc { font-size: 0.82rem; line-height: 1.5; color: rgba(255,255,255,0.85); }
+
+  /* Map legend */
+  .map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--fog);
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── ITINERARY CARDS ─────────────────────────────── */
+  .itin-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .day-card {
+    background: var(--snow);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(26,18,9,0.06);
+    border: 1px solid rgba(200,148,26,0.15);
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .day-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 36px rgba(26,18,9,0.12);
+  }
+
+  .day-num {
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0.5rem;
+    gap: 0.2rem;
+  }
+
+  .day-n {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .day-word {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+  .day-date-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.55);
+    margin-top: 0.3rem;
+    text-align: center;
+  }
+
+  .day-body { padding: 1.4rem 1.8rem; }
+
+  .day-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .day-city {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .city-badge {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--red);
+    color: white;
+    text-transform: uppercase;
+  }
+
+  .day-theme {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .day-desc { font-size: 0.9rem; line-height: 1.65; color: #4a3f35; margin-bottom: 1rem; }
+
+  .day-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .pill {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+  .pill-elder {
+    border-color: var(--moss);
+    color: var(--moss);
+    background: rgba(61,107,79,0.06);
+  }
+  .pill-kids {
+    border-color: var(--sakura);
+    color: #a0435a;
+    background: rgba(232,164,176,0.12);
+  }
+  .pill-tip {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(200,148,26,0.07);
+  }
+
+  /* Phase separator */
+  .phase-sep {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+  .phase-line { flex: 1; height: 1px; background: rgba(200,148,26,0.25); }
+  .phase-label {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 0.85rem;
+    color: var(--fog);
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── TIPS ────────────────────────────────────────── */
+  .tips-wrap {
+    background: var(--ink);
+    padding: 5rem 2rem;
+  }
+  .tips-inner { max-width: 1300px; margin: 0 auto; }
+
+  .tips-inner .section-label { color: var(--gold); }
+  .tips-inner .section-title { color: var(--snow); }
+  .tips-inner .divider { background: var(--red); }
+
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .tip-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,148,26,0.18);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: background 0.2s;
+  }
+  .tip-card:hover { background: rgba(255,255,255,0.07); }
+
+  .tip-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+  .tip-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .tip-body { font-size: 0.85rem; line-height: 1.65; color: rgba(255,255,255,0.65); }
+
+  /* ── PACKING ─────────────────────────────────────── */
+  .packing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+    margin-top: 0;
+  }
+  .pack-col { background: var(--snow); border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(200,148,26,0.15); }
+  .pack-col h4 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.8rem;
+  }
+  .pack-col ul { list-style: none; }
+  .pack-col ul li {
+    font-size: 0.83rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(26,18,9,0.06);
+    color: #4a3f35;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pack-col ul li:last-child { border-bottom: none; }
+  .pack-col ul li::before { content: '→'; color: var(--gold); font-size: 0.75rem; }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer {
+    background: #100d08;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+  }
+  footer span { color: var(--gold); }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2.5rem;
+    background: rgba(26,18,9,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,148,26,0.15);
+  }
+  .nav-logo {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .day-card { grid-template-columns: 70px 1fr; }
+    .day-n { font-size: 1.5rem; }
+    .day-body { padding: 1rem; }
+    .ov-item { padding: 1.2rem 0.5rem; }
+  }
+
+  /* ── LOCATE ME BUTTON ────────────────────────────── */
+  #map-container { position: relative; }
+
+  .locate-btn {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 1.4rem;
+    background: var(--ink);
+    color: var(--snow);
+    border: 1.5px solid var(--gold);
+    border-radius: 100px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .locate-btn:hover {
+    background: #2c1f0e;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.55);
+    transform: translateX(-50%) translateY(-2px);
+  }
+  .locate-btn:active { transform: translateX(-50%) translateY(0); }
+  .locate-btn .btn-icon { width: 16px; height: 16px; flex-shrink: 0; }
+  .locate-btn.locating .btn-icon { animation: spin 1s linear infinite; }
+  .locate-btn.located { border-color: #4caf8a; color: #4caf8a; }
+  .locate-btn.error   { border-color: #e57373; color: #e57373; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── SEARCH FALLBACK PANEL ───────────────────────── */
+  .locate-panel {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    background: var(--ink);
+    border: 1.5px solid var(--gold);
+    border-radius: 16px;
+    padding: 1.1rem 1.2rem 1rem;
+    box-shadow: 0 8px 36px rgba(0,0,0,0.55);
+    width: min(340px, 90vw);
+    display: none;
+    flex-direction: column;
+    gap: 0.7rem;
+    animation: panelUp 0.22s ease both;
+  }
+  .locate-panel.visible { display: flex; }
+
+  @keyframes panelUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  .panel-title {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-close {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+  }
+  .panel-close:hover { color: white; }
+
+  .panel-note {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+  }
+  .panel-note strong { color: #e57373; }
+
+  .panel-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .panel-input {
+    flex: 1;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(200,148,26,0.35);
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    color: white;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .panel-input::placeholder { color: rgba(255,255,255,0.3); }
+  .panel-input:focus { border-color: var(--gold); }
+
+  .panel-search-btn {
+    background: var(--gold);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .panel-search-btn:hover { background: #daa820; }
+
+  .panel-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .quick-chip {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(200,148,26,0.3);
+    color: rgba(255,255,255,0.65);
+    background: rgba(200,148,26,0.07);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .quick-chip:hover { background: rgba(200,148,26,0.2); color: white; }
+
+  /* Pulsing user dot */
+  @keyframes locatePulse {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(3.5); opacity: 0;   }
+  }
+  .user-loc-pulse {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: rgba(76,175,138,0.35);
+    border: 2px solid #4caf8a;
+    position: relative;
+  }
+  .user-loc-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(76,175,138,0.4);
+    animation: locatePulse 1.8s ease-out infinite;
+  }
+
+  /* ── PLACE SEARCH WIDGET ─────────────────────────── */
+  .search-toggle {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1002;
+    width: 38px;
+    height: 38px;
+    background: var(--ink);
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.45);
+    transition: background 0.2s, transform 0.15s;
+    color: var(--gold);
+  }
+  .search-toggle:hover { background: #2c1f0e; transform: scale(1.06); }
+  .search-toggle svg { width: 17px; height: 17px; }
+
+  .place-search-widget {
+    position: absolute;
+    top: 12px;
+    left: 58px;
+    z-index: 1001;
+    width: min(320px, calc(100vw - 80px));
+    background: var(--ink);
+    border: 1.5px solid var(--gold);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55);
+    overflow: hidden;
+    /* hidden by default */
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.32s cubic-bezier(0.4,0,0.2,1),
+                opacity 0.22s ease,
+                transform 0.22s ease;
+    transform: translateY(-6px);
+  }
+  .place-search-widget.open {
+    max-height: 420px;
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+
+  .psw-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0.9rem 0.6rem;
+    border-bottom: 1px solid rgba(200,148,26,0.18);
+  }
+  .psw-head svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
+  .psw-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: white;
+    caret-color: var(--gold);
+  }
+  .psw-input::placeholder { color: rgba(255,255,255,0.28); }
+  .psw-clear {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0 2px;
+    display: none;
+  }
+  .psw-clear.visible { display: block; }
+  .psw-clear:hover { color: white; }
+
+  .psw-results {
+    max-height: 260px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(200,148,26,0.3) transparent;
+  }
+  .psw-result-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.65rem 0.9rem;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s;
+  }
+  .psw-result-item:last-child { border-bottom: none; }
+  .psw-result-item:hover { background: rgba(200,148,26,0.1); }
+  .psw-result-icon { font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+  .psw-result-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: white;
+    line-height: 1.3;
+  }
+  .psw-result-sub {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.42);
+    margin-top: 1px;
+    font-family: 'Josefin Sans', sans-serif;
+    letter-spacing: 0.04em;
+  }
+
+  .psw-status {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.38);
+    font-family: 'Josefin Sans', sans-serif;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  /* pinned search result marker */
+  .search-pin-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  }
+
+  /* ── HISTORY PANEL ───────────────────────────────── */
+  .history-toggle {
+    position: absolute;
+    top: 58px;
+    left: 12px;
+    z-index: 1002;
+    width: 38px;
+    height: 38px;
+    background: var(--ink);
+    border: 1.5px solid rgba(200,148,26,0.55);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.45);
+    transition: background 0.2s, transform 0.15s;
+    color: rgba(200,148,26,0.8);
+    position: absolute;
+  }
+  .history-toggle:hover { background: #2c1f0e; transform: scale(1.06); }
+  .history-toggle svg { width: 17px; height: 17px; }
+
+  .hist-badge {
+    position: absolute;
+    top: -5px; right: -5px;
+    min-width: 16px; height: 16px;
+    background: var(--red);
+    color: white;
+    border-radius: 100px;
+    font-size: 0.58rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+  }
+  .hist-badge.visible { display: flex; }
+
+  .history-panel {
+    position: absolute;
+    top: 58px;
+    left: 58px;
+    z-index: 1001;
+    width: min(300px, calc(100vw - 80px));
+    background: var(--ink);
+    border: 1.5px solid rgba(200,148,26,0.45);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease, transform 0.22s ease;
+    transform: translateY(-6px);
+  }
+  .history-panel.open { max-height: 460px; opacity: 1; pointer-events: all; transform: translateY(0); }
+
+  .hp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0.9rem 0.6rem;
+    border-bottom: 1px solid rgba(200,148,26,0.18);
+  }
+  .hp-title {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .hp-clear-btn {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.4);
+    color: #e57373;
+    border-radius: 6px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .hp-clear-btn:hover { background: rgba(192,57,43,0.3); }
+
+  .hp-reset-info {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.32);
+    font-family: 'Josefin Sans', sans-serif;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .reset-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .reset-fill { height: 100%; background: linear-gradient(to right, var(--gold), var(--red)); border-radius: 2px; }
+
+  .hp-list { max-height: 320px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(200,148,26,0.3) transparent; }
+  .hp-empty { padding: 1.4rem 0.9rem; font-size: 0.78rem; color: rgba(255,255,255,0.28); font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.08em; text-align: center; }
+
+  .hp-day-label {
+    padding: 0.45rem 0.9rem 0.2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(200,148,26,0.6);
+    background: rgba(200,148,26,0.04);
+  }
+
+  .hp-entry {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.52rem 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .hp-entry:last-child { border-bottom: none; }
+  .hp-entry:hover { background: rgba(200,148,26,0.08); }
+  .hp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .hp-entry-info { flex: 1; min-width: 0; }
+  .hp-entry-name { font-size: 0.82rem; color: white; font-family: 'DM Sans', sans-serif; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hp-entry-time { font-size: 0.63rem; color: rgba(255,255,255,0.36); font-family: 'Josefin Sans', sans-serif; letter-spacing: 0.06em; margin-top: 1px; }
+  .hp-entry-del { background: none; border: none; color: rgba(255,255,255,0.18); cursor: pointer; font-size: 0.75rem; padding: 0; line-height: 1; flex-shrink: 0; transition: color 0.15s; }
+  .hp-entry-del:hover { color: #e57373; }
+
+  .hist-trail-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 5px rgba(0,0,0,0.5); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">🇯🇵 Khoo Family Japan Journey</a>
+  <ul class="nav-links">
+    <li><a href="#map-section">Map</a></li>
+    <li><a href="#itinerary">Itinerary</a></li>
+    <li><a href="#tips">Travel Tips</a></li>
+    <li><a href="#packing">Packing</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-orb"></div>
+
+  <p class="hero-eyebrow">Family · Multi-Generational · Winter</p>
+  <h1 class="hero-title">Land of the<br/><em>Rising Sun</em></h1>
+  <p class="hero-sub">Dec 3 – Dec 17, 2026 &nbsp;·&nbsp; 15 Days &nbsp;·&nbsp; Tokyo, Kyoto, Osaka</p>
+
+  <div class="hero-tags">
+    <span class="tag">✈️ 15 Days</span>
+    <span class="tag">👴 Elder-Friendly</span>
+    <span class="tag">🧒 Kid-Friendly</span>
+    <span class="tag">❄️ Winter Magic</span>
+    <span class="tag">🏯 3 Destinations</span>
+    <span class="tag">🍜 Culinary Journey</span>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="overview-strip">
+  <div class="ov-item"><div class="ov-num">15</div><div class="ov-label">Days</div></div>
+  <div class="ov-item"><div class="ov-num">3</div><div class="ov-label">Main Regions</div></div>
+  <div class="ov-item"><div class="ov-num">30+</div><div class="ov-label">Attractions</div></div>
+  <div class="ov-item"><div class="ov-num">Dec</div><div class="ov-label">3 – 17</div></div>
+  <div class="ov-item"><div class="ov-num">All</div><div class="ov-label">Ages Welcome</div></div>
+</div>
+
+<div class="map-wrap" id="map-section">
+  <div class="map-inner">
+    <p class="section-label">Interactive Route</p>
+    <h2 class="section-title">Our Journey Across Japan</h2>
+    <div class="divider"></div>
+    <p style="font-size:0.9rem;color:var(--fog);margin-bottom:0.5rem;">Click the numbered markers to explore each destination. High-resolution satellite imagery available — use the layer control (top-right).</p>
+    <div id="map-container">
+      <div id="map"></div>
+
+      <!-- Place Search Widget -->
+      <button class="search-toggle" id="searchToggle" onclick="toggleSearch()" title="Search places">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/>
+        </svg>
+      </button>
+
+      <div class="place-search-widget" id="placeSearch">
+        <div class="psw-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/>
+          </svg>
+          <input class="psw-input" id="placeInput" type="text" placeholder="Search any place on the map…" autocomplete="off" oninput="onPlaceInput(this)" onkeydown="onPlaceKey(event)"/>
+          <button class="psw-clear" id="pswClear" onclick="clearPlaceSearch()">✕</button>
+        </div>
+        <div class="psw-results" id="pswResults">
+          <div class="psw-status" id="pswStatus">Type to search worldwide…</div>
+        </div>
+      </div>
+
+      <!-- Fallback search panel (shown on GPS denial) -->
+      <div class="locate-panel" id="locatePanel">
+        <div class="panel-title">
+          <span>📍 Find Your Location</span>
+          <button class="panel-close" onclick="closePanel()">✕</button>
+        </div>
+        <p class="panel-note"><strong>GPS was blocked</strong> by this browser window. Type any city or place below to jump the map there instead.</p>
+        <div class="panel-row">
+          <input class="panel-input" id="cityInput" type="text" placeholder="e.g. London, New York…" onkeydown="if(event.key==='Enter') searchCity()"/>
+          <button class="panel-search-btn" onclick="searchCity()">Go →</button>
+        </div>
+        <div class="panel-quick">
+          <span class="quick-chip" onclick="jumpTo(51.505,-0.09,'London, UK')">🇬🇧 London</span>
+          <span class="quick-chip" onclick="jumpTo(40.712,-74.006,'New York, USA')">🗽 New York</span>
+          <span class="quick-chip" onclick="jumpTo(1.352,103.819,'Singapore')">🇸🇬 Singapore</span>
+          <span class="quick-chip" onclick="jumpTo(25.204,55.270,'Dubai')">🇦🇪 Dubai</span>
+          <span class="quick-chip" onclick="jumpTo(-33.868,151.209,'Sydney')">🇦🇺 Sydney</span>
+          <span class="quick-chip" onclick="jumpTo(48.856,2.352,'Paris')">🗼 Paris</span>
+          <span class="quick-chip" onclick="jumpTo(22.302,114.177,'Hong Kong')">🇭🇰 Hong Kong</span>
+          <span class="quick-chip" onclick="jumpTo(37.566,126.977,'Seoul')">🇰🇷 Seoul</span>
+        </div>
+      </div>
+
+      <button class="locate-btn" id="locateBtn" onclick="locateMe()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          <circle cx="12" cy="12" r="8" stroke-dasharray="3 2"/>
+        </svg>
+        <span id="locateBtnText">Locate Me</span>
+      </button>
+
+      <!-- History toggle button -->
+      <button class="history-toggle" id="historyToggle" onclick="toggleHistory()" title="Location history" style="position:absolute;top:58px;left:12px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12 6 12 12 15.5 15.5"/>
+          <path d="M3.05 9A9 9 0 0 1 21 12"/>
+        </svg>
+        <span class="hist-badge" id="histBadge">0</span>
+      </button>
+
+      <!-- History panel -->
+      <div class="history-panel" id="historyPanel">
+        <div class="hp-head">
+          <span class="hp-title">📍 Location History</span>
+          <button class="hp-clear-btn" onclick="clearHistory()">Clear All</button>
+        </div>
+        <div class="hp-reset-info">
+          <span id="resetLabel">Resets in —</span>
+          <div class="reset-bar"><div class="reset-fill" id="resetFill" style="width:0%"></div></div>
+        </div>
+        <div class="hp-list" id="histList">
+          <div class="hp-empty">No history yet.<br/>Use Locate Me or search a place.</div>
+        </div>
+      </div>
+    </div>
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#c0392b;"></div> Main Cities</div>
+      <div class="legend-item" style="gap:0.3rem;">— Route Path</div>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="itinerary">
+  <p class="section-label">Day by Day</p>
+  <h2 class="section-title">Full Itinerary</h2>
+  <div class="divider"></div>
+  <p style="font-size:0.88rem;color:var(--fog);margin-bottom:2rem;">
+    <span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;"><span class="pill pill-elder" style="display:inline;">Elder tip</span> Accessible / gentle activity</span>
+    <span style="display:inline-flex;align-items:center;gap:4px;margin-right:12px;"><span class="pill pill-kids" style="display:inline;">Kids ★</span> Children's highlight</span>
+    <span style="display:inline-flex;align-items:center;gap:4px;"><span class="pill pill-tip" style="display:inline;">Pro tip</span> Insider advice</span>
+  </p>
+
+  <div class="itin-grid">
+
+    <div class="phase-sep"><div class="phase-line"></div><div class="phase-label">Phase 1 · Tokyo Introduction &amp; Train Magic</div><div class="phase-line"></div></div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#1a1209;">
+        <div class="day-n">01</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 3</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo — Arrival</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">✈️ Arrival · Settle In · Tokyo</div>
+        <p class="day-desc">Fly into Narita or Haneda Airport. Take the Narita Express or Airport Limousine Bus to your hotel in Shinjuku — a great central base. After freshening up, enjoy a gentle evening stroll through <strong>Shinjuku's Takashimaya Times Square</strong> for dinner at one of the department store restaurants. December in Tokyo sparkles with beautiful illuminations (Winter Light events). Early night to recover from jet lag.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Wheelchair-accessible hotels in Shinjuku</span>
+          <span class="pill pill-elder">Elevator at all metro stations</span>
+          <span class="pill pill-kids">Kids ★ Illuminations</span>
+          <span class="pill pill-tip">Pro tip: Buy Suica card at airport</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#2c1f0e;">
+        <div class="day-n">02</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 4</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo — The Ultimate Train Day</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">🚂 Train Stuff · Omiya Railway Museum</div>
+        <p class="day-desc">Dedicate today entirely to incredible train experiences. Head to the world-class <strong>Omiya Railway Museum</strong>, where kids can try miniature driving simulators and elders can admire historic imperial carriages. In the afternoon, return to Tokyo Station to explore <strong>Plarail Shop</strong> and character street, then view the iconic shinkansen platforms. Finish the day with a meal overlooking the busy train tracks.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Museum is fully accessible with rest lounges</span>
+          <span class="pill pill-kids">Kids ★ Train simulators &amp; Plarail toys</span>
+          <span class="pill pill-kids">Kids ★ Shinkansen spotting</span>
+          <span class="pill pill-tip">Pro tip: Book simulator slots as soon as you arrive</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#3a2810;">
+        <div class="day-n">03</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 5</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo — Asakusa &amp; Ueno</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">⛩️ Senso-ji · Nakamise · Ueno Zoo</div>
+        <p class="day-desc">Start the morning at <strong>Senso-ji Temple</strong> in Asakusa — Tokyo's oldest and most iconic temple. Walk the Nakamise shopping street for souvenirs, traditional snacks, and crafts. Elders can rest at the temple gardens while kids explore. After lunch, head to <strong>Ueno Park</strong> and the <strong>Ueno Zoo</strong> — Japan's oldest zoo with giant pandas. The park is beautifully decorated in December.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Flat walking paths, many rest benches</span>
+          <span class="pill pill-elder">Rickshaw rides available for elders</span>
+          <span class="pill pill-kids">Kids ★ Giant pandas at Ueno Zoo</span>
+          <span class="pill pill-kids">Kids ★ Nakamise candy &amp; toys</span>
+          <span class="pill pill-tip">Pro tip: Arrive Senso-ji before 9am</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#1a2c1a;">
+        <div class="day-n">04</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 6</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo — Sanrio Puroland</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">🎀 Hello Kitty · Sanrio Land · Magical Shows</div>
+        <p class="day-desc">Spend the entire day immersed in the whimsical world of Hello Kitty and friends at <strong>Sanrio Puroland</strong>. This indoor theme park is completely weatherproof and comfortable for family members of all generations. Enjoy vibrant character parades, ride the Sanrio Character Boat Ride, and explore themed rooms. Cozy restaurants offer adorable, character-shaped food items that make lunch unforgettable for the kids.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Completely indoor, climate-controlled, elevator-friendly</span>
+          <span class="pill pill-kids">Kids ★ Hello Kitty character greetings</span>
+          <span class="pill pill-kids">Kids ★ Colorful fairytale parades</span>
+          <span class="pill pill-tip">Pre-book your Puroland tickets online for easy entry</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#1a2c28;">
+        <div class="day-n">05</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 7</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo — Harajuku &amp; Shibuya</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">🌸 Meiji Shrine · Harajuku · Scramble</div>
+        <p class="day-desc">Morning at the serene <strong>Meiji Jingu Shrine</strong> — a forested oasis in central Tokyo, perfect for quiet reflection for elders. Then explore <strong>Takeshita Street</strong> in Harajuku for quirky fashion and crepes (kids love it!). Afternoon at the famous <strong>Shibuya Scramble Crossing</strong>, then the Shibuya Sky observatory for panoramic city views. December evening brings dazzling Omotesando Christmas illuminations.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Meiji Shrine gravel paths — wear comfortable shoes</span>
+          <span class="pill pill-kids">Kids ★ Crepes &amp; Takeshita Street</span>
+          <span class="pill pill-kids">Kids ★ Shibuya Sky views</span>
+          <span class="pill pill-tip">Pro tip: Omotesando lights on after 5pm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#2a1a2c;">
+        <div class="day-n">06</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 8</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo → Kyoto</div>
+          <span class="city-badge">Transit</span>
+        </div>
+        <div class="day-theme">🚅 Shinkansen Ride · Arrival in Kyoto</div>
+        <p class="day-desc">Morning: pack up and board the iconic <strong>Shinkansen bullet train</strong> from Tokyo Station to Kyoto (~2.5 hrs) — an essential high-speed railway experience for the whole family. Arrive in Kyoto by the afternoon; check into your hotel and head over to explore <strong>Nishiki Market</strong> ("Kyoto's Kitchen") for tastings of local pickles, tamagoyaki, and fresh tofu. Low-key first evening in the ancient capital.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Shinkansen seats wide and comfortable</span>
+          <span class="pill pill-kids">Kids ★ Bullet train at 300km/h!</span>
+          <span class="pill pill-tip">Reserve shinkansen seats in advance for Mt. Fuji views</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-sep"><div class="phase-line"></div><div class="phase-label">Phase 2 · Kyoto — Ancient Capital</div><div class="phase-line"></div></div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#2c1a0e;">
+        <div class="day-n">07</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 9</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Kyoto — Fushimi Inari &amp; Gion</div>
+          <span class="city-badge">Kyoto</span>
+        </div>
+        <div class="day-theme">⛩️ 10,000 Torii Gates · Geisha District</div>
+        <p class="day-desc">Morning at <strong>Fushimi Inari-taisha</strong> — thousands of vermilion torii gates winding up a mountainside. Walk the lower portion (30 min flat route) with elders, while energetic kids can climb further. The gates glow beautifully in December morning light. Afternoon in the <strong>Gion district</strong>: walk Hanamikoji Street for the chance to spot a geiko or maiko. Visit <strong>Yasaka Shrine</strong> decorated for the winter season.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Lower gates route is manageable — 30 min flat</span>
+          <span class="pill pill-kids">Kids ★ Torii gate photo tunnels</span>
+          <span class="pill pill-tip">Go before 8am for fewer crowds</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#1a1a2c;">
+        <div class="day-n">08</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 10</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Kyoto — Arashiyama Bamboo Grove</div>
+          <span class="city-badge">Kyoto</span>
+        </div>
+        <div class="day-theme">🎋 Bamboo Grove · Monkey Park · River</div>
+        <p class="day-desc">Day trip to the Arashiyama district. Walk the magical <strong>Sagano Bamboo Grove</strong> — towering stalks of green bamboo create an otherworldly atmosphere. Visit <strong>Tenryu-ji Temple</strong> with its UNESCO garden. Elders can enjoy a peaceful <strong>Hozu River boat cruise</strong> (45 min, seated). Kids can hike up to <strong>Iwatayama Monkey Park</strong> to feed wild Japanese macaques with views over Kyoto.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Boat cruise — zero walking, beautiful scenery</span>
+          <span class="pill pill-elder">Rental rickshaws available in Arashiyama</span>
+          <span class="pill pill-kids">Kids ★ Feed wild monkeys!</span>
+          <span class="pill pill-tip">Visit bamboo grove at sunrise</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#1a2c1a;">
+        <div class="day-n">09</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 11</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Kyoto — Iconic Pavilions &amp; Castles</div>
+          <span class="city-badge">Kyoto</span>
+        </div>
+        <div class="day-theme">🏯 Kinkaku-ji · Ryoan-ji · Nijo Castle</div>
+        <p class="day-desc">Morning visit to the world-famous <strong>Kinkaku-ji (Golden Pavilion)</strong> — its reflection on the pond is simply breathtaking, especially in winter when dusted with frost. Then the enigmatic <strong>Ryoan-ji rock garden</strong>, a meditative space perfect for quiet reflection. Afternoon at <strong>Nijo Castle</strong> with its "nightingale floors" that squeak to alert of intruders — a fascinating story for kids. Accessible castle grounds.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Flat paved paths throughout Kinkaku-ji</span>
+          <span class="pill pill-elder">Ryoan-ji: peaceful, bench seating available</span>
+          <span class="pill pill-kids">Kids ★ Squeaking nightingale floors!</span>
+          <span class="pill pill-tip">Book skip-the-line tickets online</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-sep"><div class="phase-line"></div><div class="phase-label">Phase 3 · Osaka — City of Food &amp; Wonder</div><div class="phase-line"></div></div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#2c2010;">
+        <div class="day-n">10</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 12</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Kyoto → Osaka Arrival</div>
+          <span class="city-badge">Osaka</span>
+        </div>
+        <div class="day-theme">🍜 Takoyaki · Neon Lights · Dotonbori</div>
+        <p class="day-desc">Take a quick and simple local train ride from Kyoto to Osaka (~30 min). Check into your hotel, then head straight to <strong>Dotonbori</strong> — the neon-lit canal district where Osaka's famous street food culture thrives. Try <strong>takoyaki</strong> (octopus balls) and <strong>okonomiyaki</strong> (savory pancakes). Elders can rest at canal-side cafés while kids soak in the incredible atmosphere and giant moving signs.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Flat canal-side promenade, many seating spots</span>
+          <span class="pill pill-kids">Kids ★ Giant moving Glico man sign</span>
+          <span class="pill pill-kids">Kids ★ Try all the street food!</span>
+          <span class="pill pill-tip">Evening visit for best neon atmosphere</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#2c1a1a;">
+        <div class="day-n">11</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 13</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Osaka — Castle &amp; Aquarium</div>
+          <span class="city-badge">Osaka</span>
+        </div>
+        <div class="day-theme">🏯 Osaka Castle · 🐳 Kaiyukan Aquarium</div>
+        <p class="day-desc"><strong>Osaka Castle</strong> is a stunning fortress surrounded by a moat, with a museum inside detailing ancient history. The grounds are beautiful in winter. In the afternoon, visit the world-class <strong>Kaiyukan Aquarium</strong> — one of the largest in the world, featuring whale sharks, manta rays, and a massive deep Pacific Ocean tank. The aquarium is fully accessible and utterly fascinating for every generation.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Kaiyukan is wheelchair accessible throughout</span>
+          <span class="pill pill-elder">Elevator access in Osaka Castle</span>
+          <span class="pill pill-kids">Kids ★ Whale sharks up close!</span>
+          <span class="pill pill-kids">Kids ★ Castle samurai history</span>
+          <span class="pill pill-tip">Combo ticket saves money on both attractions</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#0e1a2c;">
+        <div class="day-n">12</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 14</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Osaka — Universal Studios or Local Markets</div>
+          <span class="city-badge">Osaka</span>
+        </div>
+        <div class="day-theme">🎢 Entertainment · Kuromon Market · Osaka Exploration</div>
+        <p class="day-desc">Spend the day exploring dynamic local culture. Families can visit <strong>Kuromon Ichiba Market</strong> to sample spectacular fresh seafood, Wagyu beef skewers, and winter fruits. Alternatively, take the family to enjoy the cinematic environments at Universal Studios Japan. Gather together for a beautiful, hearty dinner of Osaka-style kushikatsu in the vibrant Shinsekai neighborhood to round out the evening.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Markets have flat surfaces and direct seating areas</span>
+          <span class="pill pill-kids">Kids ★ Massive colorful shop displays</span>
+          <span class="pill pill-tip">Try the delicious white strawberries found in winter markets</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-sep"><div class="phase-line"></div><div class="phase-label">Phase 4 · Tokyo Return &amp; Final Two-Day Shopping Grand Finale</div><div class="phase-line"></div></div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#2c1a0e;">
+        <div class="day-n">13</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 15</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Osaka → Tokyo Return</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">🚅 Return Transit · Akihabara &amp; Odaiba</div>
+        <p class="day-desc">Board the Shinkansen back to Tokyo. Check into your hotel, then make your way to <strong>Akihabara</strong> — the electric town famous for anime and gaming culture. Kids will love the multi-floor arcades. Later, travel to the futuristic waterfront island of <strong>Odaiba</strong> to view the giant Gundam statue and explore the expansive DiverCity mall. Complete your evening with a cozy dinner along Tokyo Bay.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Yurikamome monorail offers great views and elevators</span>
+          <span class="pill pill-kids">Kids ★ Giant robot statues and game centers</span>
+          <span class="pill pill-tip">Enjoy the panoramic rainbow bridge view at sunset</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#1a2210;">
+        <div class="day-n">14</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 16</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo Shopping Day 1</div>
+          <span class="city-badge">Tokyo</span>
+        </div>
+        <div class="day-theme">🛍️ Shibuya &amp; Harajuku Souvenir Blitz</div>
+        <p class="day-desc">Begin your dedicated final shopping block. Spend the day hunting for tax-free goodies across <strong>Shibuya</strong> and <strong>Harajuku</strong>. Visit the massive Shibuya Mega Don Quijote for unique snacks, cosmetic products, and gifts. Head to Shibuya Parco to let the kids browse the flagship Nintendo Tokyo and Pokémon Center stores, while elders can enjoy premium tea and luxury boutiques at nearby Omotesando Hills.</p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Department stores feature wonderful accessible lounges</span>
+          <span class="pill pill-kids">Kids ★ Official Nintendo and Pokémon items</span>
+          <span class="pill pill-tip">Carry your passport everywhere for instant 10% tax-free savings</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-num" style="background:#c0392b;">
+        <div class="day-n">15</div>
+        <div class="day-word">Day</div>
+        <div class="day-date-label">Dec 17</div>
+      </div>
+      <div class="day-body">
+        <div class="day-location">
+          <div class="day-city">Tokyo Shopping Day 2 &amp; Departure</div>
+          <span class="city-badge" style="background:var(--moss);">Sayōnara</span>
+        </div>
+        <div class="day-theme">🛍️ Ginza Premium Retail · Airport Departure</div>
+        <p class="day-desc">Dedicate your final hours to high-end department stores and souvenir hunting in the elegant <strong>Ginza district</strong>. Explore Ginza Six or the multi-story Uniqlo flagship store. In the afternoon, smoothly transfer to Narita or Haneda Airport. Terminal gift shops offer a spectacular final chance to pick up Tokyo Banana cakes and matcha sweets before catching your flight home. <strong>またいつか — Until next time.</strong></p>
+        <div class="day-pills">
+          <span class="pill pill-elder">Airport assistance available — request at check-in</span>
+          <span class="pill pill-kids">Kids ★ Final duty-free toy shopping</span>
+          <span class="pill pill-tip">Arrive at the airport 3+ hours early to manage packed bags</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="tips-wrap" id="tips">
+  <div class="tips-inner">
+    <p class="section-label">Essential Knowledge</p>
+    <h2 class="section-title">Family Travel Tips</h2>
+    <div class="divider"></div>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <div class="tip-icon">👴</div>
+        <div class="tip-title">For Elders</div>
+        <div class="tip-body">Japan is remarkably accessible. All major train stations have elevators and escalators. IC cards (Suica/Pasmo) make transport seamless. Consider booking a hotel close to train stations to minimize walking. Onsen hot springs are excellent for arthritis and joint health — a highlight of the trip. Many major sites offer seated rest areas.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🧒</div>
+        <div class="tip-title">For Kids</div>
+        <div class="tip-body">Japan is a paradise for children. Convenience stores (7-Eleven, FamilyMart) sell amazing cheap snacks kids adore. Arcades, anime shops, capsule toy machines (gachapon), and creative food presentations keep children endlessly entertained. Ramen, sushi conveyor belts, and themed cafés make every meal an adventure.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🚆</div>
+        <div class="tip-title">Getting Around</div>
+        <div class="tip-body">Purchase the Japan Rail Pass before leaving home — it covers all shinkansen and JR trains nationwide. For intra-city travel, get a Suica IC card and top it up. The metro system is world-class and punctual. For groups with elders and small children, consider a private car service for longer days.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">💴</div>
+        <div class="tip-title">Money &amp; Budget</div>
+        <div class="tip-body">Japan is largely cash-based. Withdraw yen at 7-Eleven ATMs (best rates). Most tourist attractions and restaurants accept Visa/Mastercard now, but carry cash for smaller shops, shrines, and markets. Tourists receive a 10% consumption tax refund at most major stores — show your passport.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🌡️</div>
+        <div class="tip-title">December Weather</div>
+        <div class="tip-body">December in Japan is cold but dry and sunny — ideal for sightseeing. Tokyo averages 9°C, Kyoto 7°C. Pack warm layers; a down jacket is recommended. Snow is rare in main cities but possible in Hakone. Clear skies in December offer the best views of Mt. Fuji of any season.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">📱</div>
+        <div class="tip-title">Connectivity</div>
+        <div class="tip-body">Rent a pocket Wi-Fi at the airport or buy a data SIM card — essential for navigation and Google Translate. The Google Translate camera feature works brilliantly on Japanese menus and signs. Download offline maps on Maps.me or Google Maps before you arrive.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🍱</div>
+        <div class="tip-title">Dining Tips</div>
+        <div class="tip-body">Japan excels at catering to all palates and dietary needs. Kids love conveyor belt sushi (kaiten-zushi), ramen, curry, and takoyaki. Elders enjoy kaiseki multi-course meals. Most restaurants have picture menus — just point and order. Many convenience store meals are genuinely excellent and very affordable.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🏥</div>
+        <div class="tip-title">Health &amp; Safety</div>
+        <div class="tip-body">Japan is extremely safe with very low crime. Bring prescription medications with documentation and a doctor's letter, as some common Western medications are restricted. Travel insurance is essential. JNTO (Japan National Tourism Organization) has English-speaking tourist helplines available 24/7. Hospitals in major cities have English support.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<section class="section" id="packing">
+  <p class="section-label">What to Bring</p>
+  <h2 class="section-title">Family Packing List</h2>
+  <div class="divider"></div>
+  <div class="packing-grid">
+    <div class="pack-col">
+      <h4>Clothing</h4>
+      <ul>
+        <li>Warm down jacket or parka</li>
+        <li>Thermal base layers</li>
+        <li>Comfortable walking shoes</li>
+        <li>Slip-on shoes (for temples)</li>
+        <li>Wool socks (multiple pairs)</li>
+        <li>Gloves &amp; warm hat</li>
+        <li>Light scarf or neck warmer</li>
+        <li>Rain-resistant layer</li>
+      </ul>
+    </div>
+    <div class="pack-col">
+      <h4>For Elders</h4>
+      <ul>
+        <li>Prescribed medications + letter</li>
+        <li>Compression socks for flights</li>
+        <li>Collapsible walking cane</li>
+        <li>Knee/joint support braces</li>
+        <li>Motion sickness patches</li>
+        <li>Portable seat cushion</li>
+        <li>Hand warmers (lots!)</li>
+        <li>Reading glasses + spare</li>
+      </ul>
+    </div>
+    <div class="pack-col">
+      <h4>For Kids</h4>
+      <ul>
+        <li>Gachapon coin budget (¥500 coins)</li>
+        <li>Small backpack each</li>
+        <li>Activity book for trains</li>
+        <li>Noise-cancelling headphones</li>
+        <li>Hand sanitizer</li>
+        <li>Snack supply (familiar comforts)</li>
+        <li>Camera or instant camera</li>
+        <li>Extra set of clothes</li>
+      </ul>
+    </div>
+    <div class="pack-col">
+      <h4>Tech &amp; Documents</h4>
+      <ul>
+        <li>Japan Rail Pass (buy before)</li>
+        <li>Pocket Wi-Fi or SIM</li>
+        <li>Universal power adapter (Type A)</li>
+        <li>Portable battery bank</li>
+        <li>Passport (6+ months valid)</li>
+        <li>Travel insurance docs</li>
+        <li>Yen cash (convert before)</li>
+        <li>Suica card (get at airport)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="font-family:'Shippori Mincho',serif;font-size:1.2rem;color:rgba(255,255,255,0.7);margin-bottom:0.5rem;">日本への旅</p>
+  <p>Journey to Japan · <span>Dec 3 – 17</span> · A Multi-Generational Family Adventure</p>
+  <p style="margin-top:0.5rem;font-size:0.6rem;">Map powered by OpenStreetMap &amp; Leaflet.js — No API key required · ESRI Satellite Imagery</p>
+</footer>
+
+<script>
+// ── LEAFLET MAP ─────────────────────────────────────
+const destinations = [
+  {
+    name: "Tokyo",
+    lat: 35.6762, lng: 139.6503,
+    dates: "Dec 3–8 & Dec 15-17",
+    color: "#c0392b",
+    desc: "Japan's dynamic capital — Asakusa, Shibuya, Harajuku, Akihabara, Sanrio Puroland, and a full Train Day exploration. 7 total days of urban fun and endless shopping.",
+    order: 1
+  },
+  {
+    name: "Kyoto",
+    lat: 35.0116, lng: 135.7681,
+    dates: "Dec 8–12",
+    color: "#c0392b",
+    desc: "Ancient capital with 1,600 temples & shrines. Fushimi Inari, Arashiyama Bamboo Grove, Golden Pavilion & the historic Gion geisha district.",
+    order: 2
+  },
+  {
+    name: "Osaka",
+    lat: 34.6937, lng: 135.5023,
+    dates: "Dec 12–15",
+    color: "#c0392b",
+    desc: "Japan's food capital — Dotonbori neon lights, street food heaven, Osaka Castle, vibrant local markets, and the world-class Kaiyukan Aquarium.",
+    order: 3
+  }
+];
+
+// Route polyline (in order)
+const routeCoords = destinations
+  .slice()
+  .sort((a,b) => a.order - b.order)
+  .map(d => [d.lat, d.lng]);
+
+// Initialize map centred on Japan
+const map = L.map('map', {
+  center: [35.6, 137.5],
+  zoom: 6,
+  zoomControl: false,
+  scrollWheelZoom: true
+});
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+// Tile layers
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 19
+});
+
+const satellite = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution: 'Tiles © Esri &mdash; Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 19
+  }
+);
+
+const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)',
+  maxZoom: 17
+});
+
+// Default to satellite
+satellite.addTo(map);
+
+// Layer control
+const baseLayers = {
+  "🛰️ Satellite (ESRI)": satellite,
+  "🗺️ Street Map": osm,
+  "🏔️ Topographic": topo
+};
+L.control.layers(baseLayers, {}, { position: 'topright', collapsed: false }).addTo(map);
+
+// Draw route
+L.polyline(routeCoords, {
+  color: '#c8941a',
+  weight: 3,
+  opacity: 0.75,
+  dashArray: '8, 6'
+}).addTo(map);
+
+// Custom marker icon factory
+function makeIcon(num, color) {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
+      <ellipse cx="18" cy="41" rx="9" ry="3" fill="rgba(0,0,0,0.3)"/>
+      <path d="M18 0C8 0 0 8.1 0 18.1 0 31.6 18 44 18 44S36 31.6 36 18.1C36 8.1 28 0 18 0z" fill="${color}"/>
+      <circle cx="18" cy="18" r="12" fill="rgba(255,255,255,0.15)"/>
+      <text x="18" y="23" font-size="13" font-weight="bold" text-anchor="middle" fill="white" font-family="sans-serif">${num}</text>
+    </svg>`;
+  return L.divIcon({
+    html: svg,
+    iconSize: [36, 44],
+    iconAnchor: [18, 44],
+    popupAnchor: [0, -46],
+    className: ''
+  });
+}
+
+// Add markers
+destinations.forEach(d => {
+  const marker = L.marker([d.lat, d.lng], { icon: makeIcon(d.order, d.color) });
+  marker.bindPopup(`
+    <div class="pop-city">${d.name}</div>
+    <div class="pop-dates">${d.dates}</div>
+    <div class="pop-desc">${d.desc}</div>
+  `, { maxWidth: 260 });
+  marker.addTo(map);
+});
+
+// ── LOCATE ME ───────────────────────────────────────
+let userMarker = null;
+let userCircle = null;
+
+function locateMe() {
+  const btn     = document.getElementById('locateBtn');
+  const btnText = document.getElementById('locateBtnText');
+
+  if (!navigator.geolocation) {
+    showPanel('no-api');
+    return;
+  }
+
+  setLocateState(btn, btnText, 'locating', 'Locating…');
+  closePanel();
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+      placeUserMarker(lat, lng, accuracy, `📍 You Are Here`, `Lat: ${lat.toFixed(5)}<br>Lng: ${lng.toFixed(5)}<br>Accuracy: ±${Math.round(accuracy)}m`);
+      map.flyTo([lat, lng], Math.min(map.getZoom() + 2, 13), { duration: 1.4 });
+      setLocateState(btn, btnText, 'located', 'Located ✓');
+      setTimeout(() => setLocateState(btn, btnText, 'idle', 'Locate Me'), 4000);
+    },
+    (err) => {
+      // Permission denied (code 1) → show the search panel
+      // Other errors → brief error state + show panel too
+      setLocateState(btn, btnText, 'error', err.code === 1 ? 'GPS Blocked' : 'GPS Unavailable');
+      setTimeout(() => setLocateState(btn, btnText, 'idle', 'Locate Me'), 3500);
+      showPanel();
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
+
+function showPanel() {
+  document.getElementById('locatePanel').classList.add('visible');
+  setTimeout(() => document.getElementById('cityInput').focus(), 100);
+}
+function closePanel() {
+  document.getElementById('locatePanel').classList.remove('visible');
+}
+
+// Nominatim free geocoding — no API key needed
+async function searchCity() {
+  const query = document.getElementById('cityInput').value.trim();
+  if (!query) return;
+
+  const btn = document.querySelector('.panel-search-btn');
+  btn.textContent = '…';
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
+      headers: { 'Accept-Language': 'en' }
+    });
+    const data = await res.json();
+
+    if (data.length === 0) {
+      btn.textContent = 'Not found';
+      setTimeout(() => { btn.textContent = 'Go →'; btn.disabled = false; }, 2000);
+      return;
+    }
+
+    const { lat, lon, display_name } = data[0];
+    jumpTo(parseFloat(lat), parseFloat(lon), display_name.split(',').slice(0,2).join(','));
+    closePanel();
+  } catch(e) {
+    btn.textContent = 'Error';
+    setTimeout(() => { btn.textContent = 'Go →'; btn.disabled = false; }, 2000);
+  }
+  btn.textContent = 'Go →';
+  btn.disabled = false;
+}
+
+function jumpTo(lat, lng, label) {
+  placeUserMarker(lat, lng, 5000, `📍 ${label}`, `Jumped to: <strong>${label}</strong>`);
+  map.flyTo([lat, lng], 10, { duration: 1.4 });
+  closePanel();
+  const btn     = document.getElementById('locateBtn');
+  const btnText = document.getElementById('locateBtnText');
+  setLocateState(btn, btnText, 'located', 'Located ✓');
+  setTimeout(() => setLocateState(btn, btnText, 'idle', 'Locate Me'), 3000);
+}
+
+function placeUserMarker(lat, lng, accuracy, title, desc) {
+  if (userMarker) map.removeLayer(userMarker);
+  if (userCircle) map.removeLayer(userCircle);
+
+  userCircle = L.circle([lat, lng], {
+    radius: accuracy,
+    color: '#4caf8a', fillColor: '#4caf8a',
+    fillOpacity: 0.08, weight: 1.5, dashArray: '4 3'
+  }).addTo(map);
+
+  const dotIcon = L.divIcon({
+    html: '<div class="user-loc-pulse"></div>',
+    iconSize: [14, 14], iconAnchor: [7, 7], className: ''
+  });
+
+  userMarker = L.marker([lat, lng], { icon: dotIcon })
+    .addTo(map)
+    .bindPopup(
+      `<div class="pop-city" style="color:#4caf8a;">${title}</div><div class="pop-desc">${desc}</div>`,
+      { maxWidth: 240 }
+    )
+    .openPopup();
+}
+
+function setLocateState(btn, text, state, label) {
+  btn.className = 'locate-btn' + (state !== 'idle' ? ' ' + state : '');
+  text.textContent = label;
+}
+
+// Close panel if clicking outside it
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('locatePanel');
+  const btn   = document.getElementById('locateBtn');
+  if (!panel.contains(e.target) && !btn.contains(e.target)) closePanel();
+});
+
+// ── PLACE SEARCH WIDGET ──────────────────────────────
+let searchDebounce = null;
+let searchMarker   = null;
+let searchOpen     = false;
+
+function toggleSearch() {
+  searchOpen = !searchOpen;
+  const widget = document.getElementById('placeSearch');
+  const toggle = document.getElementById('searchToggle');
+  widget.classList.toggle('open', searchOpen);
+  toggle.style.background = searchOpen ? '#2c1f0e' : '';
+  toggle.style.borderColor = searchOpen ? 'var(--gold)' : '';
+  if (searchOpen) setTimeout(() => document.getElementById('placeInput').focus(), 80);
+}
+
+function onPlaceInput(input) {
+  const val = input.value.trim();
+  document.getElementById('pswClear').classList.toggle('visible', val.length > 0);
+  clearTimeout(searchDebounce);
+  if (val.length < 2) {
+    setStatus('Type to search worldwide…');
+    return;
+  }
+  setStatus('Searching…');
+  searchDebounce = setTimeout(() => doPlaceSearch(val), 420);
+}
+
+function onPlaceKey(e) {
+  if (e.key === 'Escape') { clearPlaceSearch(); toggleSearch(); }
+}
+
+async function doPlaceSearch(query) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=6&addressdetails=1`;
+    const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    const data = await res.json();
+
+    const container = document.getElementById('pswResults');
+    container.innerHTML = '';
+
+    if (!data.length) {
+      container.innerHTML = '<div class="psw-status">No results found.</div>';
+      return;
+    }
+
+    data.forEach(place => {
+      const icon  = getPlaceIcon(place.type, place.class);
+      const name  = place.namedetails?.name || place.display_name.split(',')[0];
+      const sub   = place.display_name.split(',').slice(1, 3).join(',').trim();
+      const item  = document.createElement('div');
+      item.className = 'psw-result-item';
+      item.innerHTML = `
+        <div class="psw-result-icon">${icon}</div>
+        <div>
+          <div class="psw-result-name">${name}</div>
+          <div class="psw-result-sub">${sub}</div>
+        </div>`;
+      item.onclick = () => selectPlace(parseFloat(place.lat), parseFloat(place.lon), name, sub, place.boundingbox);
+      container.appendChild(item);
+    });
+  } catch(e) {
+    setStatus('Search failed — check connection.');
+  }
+}
+
+function selectPlace(lat, lon, name, sub, bbox) {
+  // Remove old search marker
+  if (searchMarker) map.removeLayer(searchMarker);
+
+  const pinIcon = L.divIcon({
+    html: '<div class="search-pin-dot"></div>',
+    iconSize: [12, 12], iconAnchor: [6, 6], className: ''
+  });
+
+  searchMarker = L.marker([lat, lon], { icon: pinIcon })
+    .addTo(map)
+    .bindPopup(
+      `<div class="pop-city" style="color:var(--gold);">🔍 ${name}</div><div class="pop-desc">${sub}</div>`,
+      { maxWidth: 240 }
+    )
+    .openPopup();
+
+  // Fit to bounding box if available, else fly
+  if (bbox) {
+    map.fitBounds([[parseFloat(bbox[0]), parseFloat(bbox[2])], [parseFloat(bbox[1]), parseFloat(bbox[3])]], { maxZoom: 15, padding: [30, 30] });
+  } else {
+    map.flyTo([lat, lon], 13, { duration: 1.2 });
+  }
+
+  // Update input to show selection
+  document.getElementById('placeInput').value = name;
+  document.getElementById('pswResults').innerHTML = `
+    <div class="psw-result-item" style="cursor:default;background:rgba(200,148,26,0.08);">
+      <div class="psw-result-icon">📌</div>
+      <div>
+        <div class="psw-result-name">${name}</div>
+        <div class="psw-result-sub">${sub}</div>
+      </div>
+    </div>`;
+}
+
+function clearPlaceSearch() {
+  document.getElementById('placeInput').value = '';
+  document.getElementById('pswClear').classList.remove('visible');
+  if (searchMarker) { map.removeLayer(searchMarker); searchMarker = null; }
+  setStatus('Type to search worldwide…');
+}
+
+function setStatus(msg) {
+  document.getElementById('pswResults').innerHTML = `<div class="psw-status">${msg}</div>`;
+}
+
+function getPlaceIcon(type, cls) {
+  const map_ = {
+    city:'🏙️', town:'🏘️', village:'🏡', suburb:'🏘️',
+    country:'🌏', state:'📍', county:'📍',
+    restaurant:'🍽️', cafe:'☕', hotel:'🏨', hostel:'🛏️',
+    museum:'🏛️', temple:'⛩️', shrine:'⛩️', church:'⛪',
+    park:'🌿', forest:'🌲', beach:'🏖️', mountain:'🏔️',
+    airport:'✈️', station:'🚉', bus_stop:'🚌',
+    hospital:'🏥', school:'🏫', university:'🎓',
+    supermarket:'🛒', shop:'🏪', mall:'🏬',
+    attraction:'🎯', castle:'🏯', monument:'🗿',
+  };
+  return map_[type] || map_[cls] || '📍';
+}
+
+// Close search widget when clicking outside
+document.addEventListener('click', (e) => {
+  const widget = document.getElementById('placeSearch');
+  const toggle = document.getElementById('searchToggle');
+  if (searchOpen && !widget.contains(e.target) && !toggle.contains(e.target)) {
+    searchOpen = false;
+    widget.classList.remove('open');
+    toggle.style.background = '';
+  }
+});
+
+// ── LOCATION HISTORY ─────────────────────────────────
+const HIST_KEY      = 'jpn_loc_history';
+const RESET_MS      = 2 * 24 * 60 * 60 * 1000; // 2 days
+const DOT_COLORS    = ['#c8941a','#e8a4b0','#4caf8a','#64b5f6','#ba68c8','#ff8a65','#a5d6a7','#f48fb1'];
+let histOpen        = false;
+let histTrailLayers = [];  // leaflet layers for trail dots + line
+
+// ── Storage helpers (localStorage — works in direct file:// Chrome) ──
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HIST_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    // Check if 2-day window has expired since FIRST entry
+    if (arr.length && Date.now() - arr[0].ts >= RESET_MS) {
+      localStorage.removeItem(HIST_KEY);
+      return [];
+    }
+    return arr;
+  } catch { return []; }
+}
+
+function saveHistory(arr) {
+  try { localStorage.setItem(HIST_KEY, JSON.stringify(arr)); } catch {}
+}
+
+function addHistoryEntry(lat, lng, name) {
+  const arr = loadHistory();
+  // Avoid duplicate if within 50m and < 60s
+  const last = arr[arr.length - 1];
+  if (last && Math.abs(last.lat - lat) < 0.0005 && Math.abs(last.lng - lng) < 0.0005
+      && Date.now() - last.ts < 60000) return;
+
+  const color = DOT_COLORS[arr.length % DOT_COLORS.length];
+  arr.push({ lat, lng, name, ts: Date.now(), color });
+  saveHistory(arr);
+  refreshHistoryUI();
+}
+
+// ── UI ──────────────────────────────────────────────
+function toggleHistory() {
+  histOpen = !histOpen;
+  document.getElementById('historyPanel').classList.toggle('open', histOpen);
+  document.getElementById('historyToggle').style.background = histOpen ? '#2c1f0e' : '';
+  if (histOpen) refreshHistoryUI();
+}
+
+function refreshHistoryUI() {
+  const arr  = loadHistory();
+  const list = document.getElementById('histList');
+  const badge = document.getElementById('histBadge');
+
+  // Badge
+  badge.textContent = arr.length;
+  badge.classList.toggle('visible', arr.length > 0);
+
+  // Reset countdown
+  updateResetBar(arr);
+
+  // Trail on map
+  drawHistoryTrail(arr);
+
+  if (!arr.length) {
+    list.innerHTML = '<div class="hp-empty">No history yet.<br/>Use Locate Me or search a place.</div>';
+    return;
+  }
+
+  // Group entries by calendar day
+  const groups = {};
+  arr.forEach((e, i) => {
+    const d = new Date(e.ts);
+    const key = d.toDateString();
+    if (!groups[key]) groups[key] = [];
+    groups[key].push({ ...e, idx: i });
+  });
+
+  list.innerHTML = '';
+  Object.entries(groups).reverse().forEach(([day, entries]) => {
+    const lbl = document.createElement('div');
+    lbl.className = 'hp-day-label';
+    lbl.textContent = formatDayLabel(day);
+    list.appendChild(lbl);
+
+    entries.slice().reverse().forEach(e => {
+      const row = document.createElement('div');
+      row.className = 'hp-entry';
+      row.innerHTML = `
+        <div class="hp-dot" style="background:${e.color};"></div>
+        <div class="hp-entry-info">
+          <div class="hp-entry-name">${e.name}</div>
+          <div class="hp-entry-time">${formatTime(e.ts)}</div>
+        </div>
+        <button class="hp-entry-del" onclick="deleteHistEntry(${e.idx}, event)" title="Remove">✕</button>`;
+      row.onclick = () => { map.flyTo([e.lat, e.lng], 13, { duration: 1.1 }); };
+      list.appendChild(row);
+    });
+  });
+}
+
+function updateResetBar(arr) {
+  const label = document.getElementById('resetLabel');
+  const fill  = document.getElementById('resetFill');
+  if (!arr.length) { label.textContent = 'Resets in —'; fill.style.width = '0%'; return; }
+  const elapsed  = Date.now() - arr[0].ts;
+  const pct      = Math.min(100, (elapsed / RESET_MS) * 100);
+  const remaining = RESET_MS - elapsed;
+  fill.style.width = pct + '%';
+  label.textContent = 'Resets in ' + formatCountdown(remaining);
+}
+
+function formatCountdown(ms) {
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  if (h >= 24) return Math.floor(h / 24) + 'd ' + (h % 24) + 'h';
+  return h + 'h ' + m + 'm';
+}
+
+function formatTime(ts) {
+  return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDayLabel(dateStr) {
+  const d    = new Date(dateStr);
+  const now  = new Date();
+  const diff = Math.floor((now - d) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  return d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function deleteHistEntry(idx, e) {
+  e.stopPropagation();
+  const arr = loadHistory();
+  arr.splice(idx, 1);
+  saveHistory(arr);
+  refreshHistoryUI();
+}
+
+function clearHistory() {
+  if (!confirm('Clear all location history?')) return;
+  localStorage.removeItem(HIST_KEY);
+  refreshHistoryUI();
+}
+
+// ── Trail on map ────────────────────────────────────
+function drawHistoryTrail(arr) {
+  // Remove old trail layers
+  histTrailLayers.forEach(l => map.removeLayer(l));
+  histTrailLayers = [];
+  if (arr.length === 0) return;
+
+  // Connecting polyline
+  if (arr.length > 1) {
+    const coords = arr.map(e => [e.lat, e.lng]);
+    const line = L.polyline(coords, {
+      color: 'rgba(200,148,26,0.5)',
+      weight: 2,
+      dashArray: '4 4'
+    }).addTo(map);
+    histTrailLayers.push(line);
+  }
+
+  // Dots for each entry
+  arr.forEach((e, i) => {
+    const icon = L.divIcon({
+      html: `<div class="hist-trail-dot" style="background:${e.color};"></div>`,
+      iconSize: [9, 9], iconAnchor: [4.5, 4.5], className: ''
+    });
+    const m = L.marker([e.lat, e.lng], { icon })
+      .addTo(map)
+      .bindPopup(
+        `<div class="pop-city" style="color:${e.color};">🕐 ${e.name}</div>
+         <div class="pop-desc">${formatDayLabel(new Date(e.ts).toDateString())} · ${formatTime(e.ts)}</div>`,
+        { maxWidth: 220 }
+      );
+    histTrailLayers.push(m);
+  });
+}
+
+// ── Hook into locate & search to auto-log ───────────
+const _origPlaceUserMarker = placeUserMarker;
+placeUserMarker = function(lat, lng, accuracy, title, desc) {
+  _origPlaceUserMarker(lat, lng, accuracy, title, desc);
+  const name = title.replace('📍 ', '').replace('You Are Here', 'My Location');
+  addHistoryEntry(lat, lng, name);
+};
+
+const _origSelectPlace = selectPlace;
+selectPlace = function(lat, lon, name, sub, bbox) {
+  _origSelectPlace(lat, lon, name, sub, bbox);
+  addHistoryEntry(lat, lon, name);
+};
+
+// ── Init on load ────────────────────────────────────
+(function initHistory() {
+  refreshHistoryUI();
+  // Update countdown every minute
+  setInterval(() => {
+    if (histOpen || document.getElementById('histBadge').classList.contains('visible')) {
+      const arr = loadHistory();
+      updateResetBar(arr);
+    }
+  }, 60000);
+})();
+
+// Close history panel when clicking outside
+document.addEventListener('click', (e) => {
+  const panel  = document.getElementById('historyPanel');
+  const toggle = document.getElementById('historyToggle');
+  if (histOpen && !panel.contains(e.target) && !toggle.contains(e.target)) {
+    histOpen = false;
+    panel.classList.remove('open');
+    toggle.style.background = '';
+  }
+});
+
+// Smooth entrance animation for day cards
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.day-card, .tip-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.25s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
